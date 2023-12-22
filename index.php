@@ -60,7 +60,7 @@
                 </div>
             </div>
         </section>
-        <div class="card">
+<div class="card">
             <div class="card-header">
                 Lakukan Pemesanan Tiket Konser Disini
             </div>
@@ -112,7 +112,26 @@
                             $error = "Error: " . $sql_insert . "<br>" . mysqli_error($koneksi);
                         }
                     }
-                }                
+                }
+                
+                if (isset($_GET['op'], $_GET['id']) && !empty($_GET['op']) && !empty($_GET['id'])) {
+                    $operation = $_GET['op'];
+                    $id = $_GET['id'];
+                
+                    // Perform operation based on the value of 'op'
+                    if ($operation === 'edit') {
+                        // Redirect to the edit page with the selected ID
+                        header("Location: edit.php?id=$id");
+                        exit;
+                    } elseif ($operation === 'delete') {
+                        // Perform deletion and redirect to index page
+                        $sql_delete = "DELETE FROM tiket_konser WHERE id = $id";
+                        mysqli_query($koneksi, $sql_delete);
+                        header("Location: index.php");
+                        exit;
+                    }
+                }
+                
             ?>
                 <form action="" method="POST">
                     <div class="mb-3 row">
@@ -205,7 +224,7 @@
                                 <td scope="row"><?php echo $jumlah_tiket ?></td>
                                 <td scope="row"><?php echo $total_harga ?></td>
                                 <td scope="row">
-                                    <a href="index.php?op=edit&id=<?php echo $id ?>"><button type="button" class="btn btn-secondary">Edit</button></a>
+                                    <a href="edit.php?id=<?php echo $id ?>"><button type="button" class="btn btn-secondary">Edit</button></a>
                                     <a href="index.php?op=delete&id=<?php echo $id ?>" onclick="return confirm('Yakin mau hapus data?')"><button type="button" class="btn btn-danger">Delete</button></a>
                                 </td>
                             </tr>
